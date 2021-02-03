@@ -13147,11 +13147,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pygit2</span>
 <span class="kn">from</span> <span class="nn">pygit2</span> <span class="k">import</span> <span class="n">Signature</span>
+<span class="kn">from</span> <span class="nn">pygit2</span> <span class="k">import</span> <span class="n">Repository</span><span class="p">,</span><span class="n">discover_repository</span>
 <span class="kn">from</span> <span class="nn">pygit2</span> <span class="k">import</span> <span class="n">reference_is_valid_name</span>
 <span class="kn">import</span> <span class="nn">os</span> 
 <span class="kn">import</span> <span class="nn">time</span>
@@ -13184,12 +13185,16 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;.git&#39;</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;init repo&#39;</span><span class="p">)</span>
     <span class="n">repo</span> <span class="o">=</span>  <span class="n">pygit2</span><span class="o">.</span><span class="n">init_repository</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">bare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">workdir_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_head</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">origin_url</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">current_working_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">repository_path</span> <span class="o">=</span> <span class="n">discover_repository</span><span class="p">(</span><span class="n">current_working_directory</span><span class="p">)</span>
+    <span class="n">repo</span> <span class="o">=</span> <span class="n">Repository</span><span class="p">(</span><span class="n">repository_path</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;repo.path=&#39;</span><span class="p">,</span><span class="n">repo</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 </pre></div>
 
@@ -13207,8 +13212,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>init repo
-repo.path= d:/Workspace/ADMM_Net/MyHumbleADMM2/MLP/AutoGit/.git/
+<pre>repo.path= d:/Workspace/ADMM_Net/MyHumbleADMM2/MLP/AutoGit/.git/
 </pre>
 </div>
 </div>
@@ -13219,7 +13223,7 @@ repo.path= d:/Workspace/ADMM_Net/MyHumbleADMM2/MLP/AutoGit/.git/
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">mycommit</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span><span class="n">msg</span><span class="p">,</span><span class="n">is_first</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -13227,15 +13231,15 @@ repo.path= d:/Workspace/ADMM_Net/MyHumbleADMM2/MLP/AutoGit/.git/
     <span class="n">status</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">status</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="n">GIT_STATUS_WT_DELETED</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Remove file </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">filepath</span>
+            <span class="c1">#msg = &#39;Remove file %s&#39; % filepath</span>
             <span class="k">del</span> <span class="n">index</span><span class="p">[</span><span class="n">filepath</span><span class="p">]</span>
             
         <span class="k">elif</span> <span class="n">flag</span> <span class="o">==</span> <span class="n">GIT_STATUS_WT_NEW</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Add file </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">filepath</span>
+            <span class="c1">#msg = &#39;Add file %s&#39; % filepath</span>
             <span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
             
         <span class="k">elif</span> <span class="n">flag</span> <span class="o">==</span> <span class="n">GIT_STATUS_WT_MODIFIED</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Change file </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">filepath</span>
+            <span class="c1">#msg = &#39;Change file %s&#39; % filepath</span>
             <span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
        <span class="c1"># else:</span>
             <span class="c1">#raise Exception([filepath,statusFlag(flag)])</span>
@@ -13261,7 +13265,7 @@ repo.path= d:/Workspace/ADMM_Net/MyHumbleADMM2/MLP/AutoGit/.git/
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;GIT_STATUS_CURRENT,GIT_STATUS_INDEX_NEW,GIT_STATUS_INDEX_MODIFIED,GIT_STATUS_INDEX_DELETED,GIT_STATUS_INDEX_RENAMED,GIT_STATUS_INDEX_TYPECHANGE,GIT_STATUS_WT_NEW,GIT_STATUS_WT_MODIFIED,GIT_STATUS_WT_DELETED,GIT_STATUS_WT_TYPECHANGE,GIT_STATUS_WT_RENAMED,GIT_STATUS_WT_UNREADABLE,GIT_STATUS_IGNORED,GIT_STATUS_CONFLICTED&#39;</span>
@@ -13326,7 +13330,7 @@ GIT_STATUS_CONFLICTED=32768
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pygit2</span> <span class="k">import</span> <span class="n">GIT_STATUS_WT_DELETED</span><span class="p">,</span><span class="n">GIT_STATUS_WT_NEW</span><span class="p">,</span><span class="n">GIT_STATUS_WT_MODIFIED</span><span class="p">,</span><span class="n">GIT_STATUS_CURRENT</span>
@@ -13350,8 +13354,10 @@ GIT_STATUS_CONFLICTED=32768
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>AutoGit.ipynb:[&#39;GIT_STATUS_WT_NEW&#39;](128)
-main.md:[&#39;GIT_STATUS_WT_NEW&#39;](128)
+<pre>AutoGit.html:[&#39;GIT_STATUS_WT_NEW&#39;](128)
+AutoGit.ipynb:[&#39;GIT_STATUS_WT_MODIFIED&#39;](256)
+AutoGit2.html:[&#39;GIT_STATUS_WT_NEW&#39;](128)
+AutoGit2.ipynb:[&#39;GIT_STATUS_WT_NEW&#39;](128)
 </pre>
 </div>
 </div>
@@ -13362,7 +13368,7 @@ main.md:[&#39;GIT_STATUS_WT_NEW&#39;](128)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#list(repo.walk(&#39;master&#39;))</span>
@@ -13386,10 +13392,10 @@ main.md:[&#39;GIT_STATUS_WT_NEW&#39;](128)
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[]
+<pre>[&#39;master&#39;, &#39;new-branch&#39;]
 True
-&lt;built-in method status of Repository object at 0x000002CB8781D2E8&gt;
-{&#39;AutoGit.ipynb&#39;: 128, &#39;main.md&#39;: 128}
+&lt;built-in method status of Repository object at 0x000001E507263048&gt;
+{&#39;AutoGit.html&#39;: 128, &#39;AutoGit.ipynb&#39;: 256, &#39;AutoGit2.html&#39;: 128, &#39;AutoGit2.ipynb&#39;: 128}
 </pre>
 </div>
 </div>
@@ -13454,6 +13460,38 @@ True
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>&lt;pygit2.Object{commit:a1f4fdbda3bcec69430d81892f689444d8d41b8a}&gt;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmt</span> <span class="o">=</span> <span class="n">mycommit</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span><span class="s1">&#39;3nd&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cmt</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;pygit2.Object{commit:5ff88ab9774c465160fb5b923e68d8c4313ab0b9}&gt;
 </pre>
 </div>
 </div>
